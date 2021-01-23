@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Calculate git stats for a team on Windows"
-categories: git stats windows
+categories: git windows
 ---
 
 What if you need to get added/deleted lines for every member of a team on Windows.
@@ -19,7 +19,6 @@ git log --pretty=tformat: --since="1 Aug, 2020" --until="31 Aug, 2020" --numstat
 
 My attempt to do it in bat/cmd/sh wasn't that successful, so here we are: python is going to help. 
 
-
 {% highlight python %}
 import subprocess
 import re
@@ -31,7 +30,7 @@ def get_commits():
     toDate = "31 Aug, 2020"
     #git shortlog -s
     lines = subprocess.check_output(
-        ['git', 'shortlog', '-s', '--since="1 Aug, 2020"', '--until="31 Aug, 2020"'], stderr=subprocess.STDOUT
+        ['git', 'shortlog', '-s', '--since="' + fromDate + '"', '--until="' + toDate + '"'], stderr=subprocess.STDOUT
     ).decode('utf-8').split('\n')
 
     names = []
@@ -49,7 +48,7 @@ def get_commits():
     for name in names:
         # git log --pretty=tformat: --since="1 Aug, 2020" --until="31 Aug, 2020" --numstat --author="My Name"
         lines = subprocess.check_output(
-            ['git', 'log', '--pretty=tformat:', '--since="1 Aug, 2020"', '--until="31 Aug, 2020"', '--numstat', '--author=' + name], stderr=subprocess.STDOUT
+            ['git', 'log', '--pretty=tformat:', '--since="' + fromDate + '"', '--until="' + toDate + '"', '--numstat', '--author=' + name], stderr=subprocess.STDOUT
         ).decode('utf-8').split('\n')
 
         total_added = 0
@@ -70,5 +69,5 @@ def get_commits():
     return
 
 get_commits()
-#=> prints <name> <added lines> <deleted lines> to STDOUT.
+#=> prints <name>\n <added lines>\n <deleted lines>\n.
 {% endhighlight %}
