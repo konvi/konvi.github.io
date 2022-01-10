@@ -18,6 +18,8 @@ Cat cat = mapper.readValue(json, Cat.class);
 - if setter is available (only deserializable)
 - apply `@JsonAutoDetect` (for example, `@JsonAutoDetect(fieldVisibility = Visibility.ANY)` )
 
+Note: marshalling is getters-based, if there is `getCalculatedValue()` method (and there is no such field), Jackson will serialize `calculatedValue`. Use `@JsonAutoDetect(fieldVisibility=Visibility.ANY, getterVisibility=Visibility.NONE, isGetterVisibility=Visibility.NONE, setterVisibility=Visibility.NONE)` to chose what you'd like to marshall.
+
 `@JsonIgnore` can be added to a field itself or to getter/setter.
 
 Jackson requires either no-arg constructor or @JsonCreator. The latter works for custom deserialization.
